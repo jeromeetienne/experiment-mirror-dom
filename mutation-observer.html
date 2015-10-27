@@ -1,0 +1,36 @@
+<!doctype html>
+<html><body>
+<div id='srcElement'>
+	<div>slota</div>
+</div>
+<div id='dstElement'></div>
+<script>
+	// create an observer instance
+	var mutationObserver = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			console.log(mutation.type, mutation);
+		});    
+	});
+	
+	var srcElement = document.querySelector('#srcElement');
+	
+	mutationObserver.observe(srcElement, {
+		attributes: true,
+		childList: true,
+		characterData: true
+	})
+	
+	
+	////////////////////////////////////////////////////////////////////////
+	//
+	////////////////////////////////////////////////////////////////////////
+	
+	function addChange(){
+		var newElement = document.createElement('div')
+		newElement.innerHTML = 'new content at ' + (new Date())
+
+		var srcElement = document.querySelector('#srcElement')
+		srcElement.appendChild(newElement)	
+	}
+</script>	
+</body></html>

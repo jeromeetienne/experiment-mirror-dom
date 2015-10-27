@@ -1,0 +1,29 @@
+<!doctype html>
+<html><body>
+<div id='srcElement'>
+	<div>slota</div>
+</div>
+<div id='dstElement'></div>
+<script>
+	// ## Possible Improvements
+	// - we could make that happen on a timer
+	// - we could cache the source, to be sure we reinit the destination only when necessary
+
+	/**
+	 * mirror 2 DOMElement based on .innerHTML copy
+	 * 
+	 * inpired by http://www.html5rocks.com/en/tutorials/streaming/screenshare/#toc-method2
+	 */
+	function syncSteroscopicDom(){
+		// copy the innerHTML
+		var srcElement = document.querySelector('#srcElement')
+		var dstElement = document.querySelector('#dstElement')
+		dstElement.innerHTML = srcElement.innerHTML;
+		
+		// destination should be readyonly, no scrolling, and no selections.
+		dstElement.style.pointerEvents = 'none';
+		dstElement.style.overflow = 'hidden';
+		dstElement.style.userSelect = 'none';
+	}
+</script>	
+</body></html>
