@@ -1,0 +1,107 @@
+<!doctype html>
+<html><body>
+<style>
+.left { border: 1px solid red; }
+.right { border: 1px solid blue; }
+</style>
+<div class="left"></div>
+<div class="right"></div>
+<script>
+// heavily based on wesley jonston one
+// -----------------------------------
+var target = document.querySelector('.left');
+target.mirror = document.querySelector(".right");
+
+function onAttributeMutation(mutation) {
+	console.log("Attributes", mutation);
+	if (!mutation.target.mirror) {
+		console.error("Target has no mirror", mutation);
+		return;
+	}
+	
+	target.mirror.setAttributeNS(mutation.attributeNamespace,
+		mutation.attributeName,
+		target.getAttributeNS(mutation.attributeNamespace,mutation.attributeName)
+	);
+}
+
+function onCharacterMutation(mutation) {
+	console.log("Chars", mutation.target);
+	if (!mutation.target.mirror) {
+		console.error("Target has no mirror", mutation);
+		return;
+	}
+	
+	target.mirror.textContent = target.textContent;
+}
+
+function onChildlistMutation(mutation) {
+	Array.prototype.forEach.call(mutation.addedNodes, function(node) {
+		console.log("Adding", node);
+		var parentNode = node.parentNode;
+		while(parentNode && !parentNode.mirror) {
+			parentNode = parentNode.parentNode;
+		}
+		
+		if (!parentNode) {
+			console.error("No parent found for", node);
+			return;
+		}
+		
+		var newNode = document.createElement(node.nodeName);
+		Array.prototype.forEach.call(node.attributes, function(attr) {
+			newNode.setAttribute(attr.name, attr.value);
+		});
+		newNode.textContent = node.textContent;
+		
+		node.mirror = newNode;
+		parentNode.mirror.appendChild(newNode);
+	});
+
+	Array.prototype.forEach.call(mutation.removedNodes, function(node) {
+		console.log("Removing", node);
+		if (!node.mirror) {
+			console.error("Node has no mirror", node);
+			return;
+		}
+		node.mirror.parentNode.removeChild(node.mirror);
+	});
+}
+		
+// create an observer instance
+var observer = new MutationObserver(function(mutations) {
+	mutations.forEach(function(mutation) {
+		switch(mutation.type) {
+			case "attributes":
+				return onAttributeMutation(mutation);
+			case "characterData":
+				return onCharacterMutation(mutation);
+			case "childList":
+				return onChildlistMutation(mutation);
+		}
+	});    
+});
+
+//////////////////////////////////////////////////////////////////////////////////
+//		Comments
+//////////////////////////////////////////////////////////////////////////////////
+observer.observe(target, { 
+	attributes: true, 
+	childList: true, 
+	characterData: true,
+	subtree: true,
+});
+
+//////////////////////////////////////////////////////////////////////////////////
+//		Comments
+//////////////////////////////////////////////////////////////////////////////////
+var button = document.createElement("button");
+target.appendChild(button);
+button.textContent = "AddNode";
+button.setAttribute("class", "foo");
+button.addEventListener("click", function() {
+	button.parentNode.removeChild(button);
+});
+// observer.disconnect();
+</script>
+</body></html>
