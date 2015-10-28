@@ -1,0 +1,23 @@
+<!doctype html>
+<html><body>
+<script src='../threex.dommirror.js'></script>
+<style>
+#srcElement, #dstElement {
+	width: 45%;
+	display: inline-block;
+}
+</style>
+<div id='srcElement'></div>
+<div id='dstElement'></div>
+<script>
+	var srcElement = document.querySelector('#srcElement')
+	var dstElement = document.querySelector('#dstElement')
+	
+	THREEx.DomMirror.fillWithRandomDomElements(srcElement, 100)
+
+	THREEx.DomMirror.copyDomByInnerHTML(srcElement, dstElement)
+
+	var isEqual = THREEx.DomMirror.domEqual(srcElement, dstElement)
+	console.assert(isEqual === true)
+</script>	
+</body></html>

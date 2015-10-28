@@ -1,11 +1,16 @@
 <!doctype html>
 <html><body>
+<script src='../threex.dommirror.js'></script>
 <style>
 .left { border: 1px solid red; }
 .right { border: 1px solid blue; }
+#srcElement, #dstElement {
+	width: 45%;
+	display: inline-block;
+}
 </style>
-<div class="left"></div>
-<div class="right"></div>
+<div id='srcElement' class="left"></div>
+<div id='dstElement' class="right"></div>
 <script>
 // heavily based on wesley jonston one
 // -----------------------------------
@@ -19,7 +24,8 @@ function onAttributeMutation(mutation) {
 		return;
 	}
 	
-	target.mirror.setAttributeNS(mutation.attributeNamespace,
+	target.mirror.setAttributeNS(
+		mutation.attributeNamespace,
 		mutation.attributeName,
 		target.getAttributeNS(mutation.attributeNamespace,mutation.attributeName)
 	);
@@ -27,6 +33,7 @@ function onAttributeMutation(mutation) {
 
 function onCharacterMutation(mutation) {
 	console.log("Chars", mutation.target);
+
 	if (!mutation.target.mirror) {
 		console.error("Target has no mirror", mutation);
 		return;
@@ -95,13 +102,25 @@ observer.observe(target, {
 //////////////////////////////////////////////////////////////////////////////////
 //		Comments
 //////////////////////////////////////////////////////////////////////////////////
-var button = document.createElement("button");
-target.appendChild(button);
-button.textContent = "AddNode";
-button.setAttribute("class", "foo");
-button.addEventListener("click", function() {
-	button.parentNode.removeChild(button);
-});
+// var button = document.createElement("button");
+// target.appendChild(button);
+// button.textContent = "AddNode";
+// button.setAttribute("class", "foo");
+// button.addEventListener("click", function() {
+// 	button.parentNode.removeChild(button);
+// });
 // observer.disconnect();
+
+
+var srcElement = document.querySelector('#srcElement')
+var dstElement = document.querySelector('#dstElement')
+
+THREEx.DomMirror.fillWithRandomDomElements(srcElement, 100)
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//		Comments
+//////////////////////////////////////////////////////////////////////////////////
+
 </script>
 </body></html>
