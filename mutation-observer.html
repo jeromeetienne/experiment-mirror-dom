@@ -9,8 +9,22 @@
 	var mutationObserver = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			console.log(mutation.type, mutation);
-		});    
+			Array.prototype.slice.call(mutation.addedNodes).forEach(function(node){
+				console.log('added', node)
+				console.dir(node.parentElement)
+				var rootElement = document.querySelector('#srcElement');
+				var cssSelector = extractCssSelector(rootElement, node)
+			})
+			
+			function onAdded(){
+				
+			}
+			function extractCssSelector(rootElement, childElement){
+				
+			}
+		});
 	});
+	
 	
 	var srcElement = document.querySelector('#srcElement');
 	mutationObserver.observe(srcElement, {
@@ -25,6 +39,11 @@
 	////////////////////////////////////////////////////////////////////////
 	
 	function addChange(){
+		// var domElement = document.querySelector("#srcElement");
+		// while (domElement.firstChild) {
+		// 	domElement.removeChild(domElement.firstChild);
+		// }
+
 		var newElement = document.createElement('div')
 		newElement.innerHTML = 'new content at ' + (new Date())
 
