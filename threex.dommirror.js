@@ -39,18 +39,29 @@ THREEx.DomMirror.emptyDomElement	= function(domElement){
 ////////////////////////////////////////////////////////////////////////////////
 
 THREEx.DomMirror.fillWithRandomDomElements	= function(container, nElements){
+	// var seed = Math.random();
+	var seed = 42;
+	function random() {
+		seed = Math.sin(seed) * 10000;
+		return seed - Math.floor(seed);
+	}
+	// --------------------------
+
+
 	nElements = nElements !== undefined ? nElements : 10;
 
 	var elementCount = 0;
 
 	for(var i = 0; i < nElements; i++){
 		// create new element
-		var elementIdx = elementCount++
-		var newElement = document.createElement('ul')
-		newElement.innerHTML = '<li>element_'+elementCount+'</li>'
+		var elementIdx = ++elementCount
+		// var newElement = document.createElement('ul')
+		// newElement.innerHTML = '<li>element_'+elementCount+'</li>'
+		var newElement = document.createElement('div')
+		newElement.innerHTML = 'element_'+elementCount
 		newElement.classList.add('random_'+elementIdx)
 		// get parentElement
-		var parentIdx = Math.floor(Math.random() * (i === 0 ? 0 : i-1))
+		var parentIdx = Math.floor(random() * (i === 0 ? 0 : i-1))
 		if( parentIdx > 0 ){
 			var parentElement = container.querySelector('.random_'+parentIdx)
 		}else{

@@ -43,6 +43,7 @@ function onCharacterMutation(mutation) {
 }
 
 function onChildlistMutation(mutation) {
+	// handle mutation.addedNodes
 	Array.prototype.forEach.call(mutation.addedNodes, function(node) {
 		console.log("Adding", node);
 		var parentNode = node.parentNode;
@@ -50,21 +51,38 @@ function onChildlistMutation(mutation) {
 			parentNode = parentNode.parentNode;
 		}
 		
-		if (!parentNode) {
+		if(! parentNode ){
 			console.error("No parent found for", node);
 			return;
 		}
-		
-		var newNode = document.createElement(node.nodeName);
-		Array.prototype.forEach.call(node.attributes, function(attr) {
-			newNode.setAttribute(attr.name, attr.value);
-		});
-		newNode.textContent = node.textContent;
-		
+
+		// create the new node
+		if( false ){
+			var newNode = document.createElement(node.nodeName)
+			Array.prototype.forEach.call(node.attributes, function(attr) {
+				newNode.setAttribute(attr.name, attr.value)
+			})
+			newNode.textContent = node.textContent
+		}else if( false ){
+			var newNode = document.createElement(node.nodeName)
+			newNode.innerHTML = node.innerHTML
+			console.log('innerHTML', node.innerHTML)
+			debugger
+		}else if( true ){
+			var newNode = node.cloneNode(false)
+			// newNode.textContent = node.textContent
+			console.dir(newNode)
+			console.log('textContent', node.textContent)
+			console.dir(node.innerText)
+		}else{
+			console.assert(false)
+		}
+
 		node.mirror = newNode;
 		parentNode.mirror.appendChild(newNode);
 	});
 
+	// handle mutation.removedNodes
 	Array.prototype.forEach.call(mutation.removedNodes, function(node) {
 		console.log("Removing", node);
 		if (!node.mirror) {
@@ -93,10 +111,10 @@ var observer = new MutationObserver(function(mutations) {
 //		Comments
 //////////////////////////////////////////////////////////////////////////////////
 observer.observe(target, { 
-	attributes: true, 
+	// attributes: true, 
 	childList: true, 
-	characterData: true,
-	subtree: true,
+	// characterData: true,
+	// subtree: true,
 });
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -115,7 +133,7 @@ observer.observe(target, {
 var srcElement = document.querySelector('#srcElement')
 var dstElement = document.querySelector('#dstElement')
 
-THREEx.DomMirror.fillWithRandomDomElements(srcElement, 100)
+THREEx.DomMirror.fillWithRandomDomElements(srcElement, 4)
 
 
 //////////////////////////////////////////////////////////////////////////////////
