@@ -2,20 +2,24 @@
 <html><body>
 <script src='../threex.dommirror.js'></script>
 <style>
-.left { border: 1px solid red; }
-.right { border: 1px solid blue; }
+#srcElement {
+	border: 1px solid red;
+}
+#dstElement {
+	border: 1px solid blue;
+}
 #srcElement, #dstElement {
 	width: 45%;
 	display: inline-block;
 }
 </style>
-<div id='srcElement' class="left"></div>
-<div id='dstElement' class="right"></div>
+<div id='srcElement'></div>
+<div id='dstElement'></div>
 <script>
 // heavily based on wesley jonston one
 // -----------------------------------
-var target = document.querySelector('.left');
-target.mirror = document.querySelector(".right");
+var target = document.querySelector('#srcElement');
+target.mirror = document.querySelector("#dstElement");
 
 function onAttributeMutation(mutation) {
 	console.log("Attributes", mutation);
@@ -57,10 +61,10 @@ function onChildlistMutation(mutation) {
 		}
 
 		// create the new node
-		if( false ){
+		if( true ){
 			var newNode = document.createElement(node.nodeName)
-			Array.prototype.forEach.call(node.attributes, function(attr) {
-				newNode.setAttribute(attr.name, attr.value)
+			Array.prototype.forEach.call(node.attributes, function(attribute) {
+				newNode.setAttribute(attribute.name, attribute.value)
 			})
 			newNode.textContent = node.textContent
 		}else if( false ){
@@ -96,13 +100,14 @@ function onChildlistMutation(mutation) {
 // create an observer instance
 var observer = new MutationObserver(function(mutations) {
 	mutations.forEach(function(mutation) {
-		switch(mutation.type) {
-			case "attributes":
-				return onAttributeMutation(mutation);
-			case "characterData":
-				return onCharacterMutation(mutation);
-			case "childList":
-				return onChildlistMutation(mutation);
+		if( mutation.type === 'attributes' ){
+			onAttributeMutation(mutation);			
+		}else if( mutation.type === 'characterData' ){
+			onCharacterMutation(mutation);
+		}else if( mutation.type === 'childList' ){
+			onChildlistMutation(mutation);
+		}else{
+			console.assert(false)
 		}
 	});    
 });
@@ -133,7 +138,7 @@ observer.observe(target, {
 var srcElement = document.querySelector('#srcElement')
 var dstElement = document.querySelector('#dstElement')
 
-THREEx.DomMirror.fillWithRandomDomElements(srcElement, 4)
+THREEx.DomMirror.fillWithRandomDomElements(srcElement, 40)
 
 
 //////////////////////////////////////////////////////////////////////////////////
